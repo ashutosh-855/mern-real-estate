@@ -26,3 +26,5 @@ dist-ssr
 .env
 
 list.jsx
+node_modules/
+.env
