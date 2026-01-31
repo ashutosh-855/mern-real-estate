@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import SwiperCore from "swiper";
+import { Navigation, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css/bundle";
 import ListingItem from "../components/ListingItem";
+import HypeBanner from "../components/HypeBanner";
+import { FaArrowRight, FaHome, FaPercent, FaHandshake } from "react-icons/fa";
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
-  SwiperCore.use([Navigation]);
 
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
         const res = await fetch("/api/listing/get?offer=true&limit=4");
         const data = await res.json();
-        setOfferListings(data);
+        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data) ? data : []);
+        setOfferListings(listings);
         fetchRentListings();
       } catch (error) {
         console.log(error);
@@ -28,7 +29,8 @@ export default function Home() {
       try {
         const res = await fetch("/api/listing/get?type=rent&limit=4");
         const data = await res.json();
-        setRentListings(data);
+        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data) ? data : []);
+        setRentListings(listings);
         fetchSaleListings();
       } catch (error) {
         console.log(error);
@@ -39,7 +41,8 @@ export default function Home() {
       try {
         const res = await fetch("/api/listing/get?type=sale&limit=4");
         const data = await res.json();
-        setSaleListings(data);
+        const listings = Array.isArray(data.listings) ? data.listings : (Array.isArray(data) ? data : []);
+        setSaleListings(listings);
       } catch (error) {
         console.log(error);
       }
@@ -48,110 +51,98 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      {/* top side - Hero Section */}
-      <div className="hero-section flex flex-col gap-8 py-20 md:py-28 px-6 max-w-6xl mx-auto animate-fade-in">
-        <div className="text-center md:text-left">
-          <h1 className="text-slate-800 font-extrabold text-4xl sm:text-5xl lg:text-7xl leading-tight mb-4">
-            Find your next{" "}
-            <span className="gradient-text">perfect</span>
-            <br />
-            place with ease
-          </h1>
+    <div className="bg-beige-primary">
+      {/* Hero Section */}
+      <div className="relative min-h-[85vh] flex items-center overflow-hidden">
+        {/* Abstract Background Shapes */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-purple-100/50 rounded-l-full blur-3xl -z-10 animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-blue-100/40 rounded-r-full blur-3xl -z-10"></div>
 
-          <div className="text-gray-600 text-base sm:text-lg max-w-2xl mb-8">
-            Evans Estate is the coolest and perfect place you can think of.
-            <br />
-            We have a wide and diverse range of properties for you to choose from.
+        <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center">
+          <div className="animate-fade-in space-y-8">
+            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md border border-white/40 px-4 py-2 rounded-full shadow-sm">
+              <span className="text-purple-600 bg-purple-100 p-1 rounded-full"><FaHome className="text-sm" /></span>
+              <span className="text-sm font-bold text-slate-700 tracking-wide uppercase">Premier Real Estate</span>
+            </div>
+
+            <h1 className="text-slate-800 font-extrabold text-5xl sm:text-6xl lg:text-8xl leading-[1.1] tracking-tight">
+              Find your <br />
+              <span className="gradient-text">Dream Home</span> <br />
+              with ease.
+            </h1>
+
+            <p className="text-slate-600 text-lg md:text-xl max-w-lg leading-relaxed">
+              Doheera Estate helps you discover the most luxurious and comfortable properties across the country. Your perfect sanctuary is just a search away.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-6 pt-4">
+              <Link
+                to="/search"
+                className="modern-btn group flex items-center justify-center gap-3 px-10 py-5 text-lg font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+              >
+                Start Exploring
+                <FaArrowRight className="group-hover:translate-x-2 transition-transform" />
+              </Link>
+
+              <div className="flex -space-x-4 items-center">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="w-12 h-12 rounded-full border-4 border-white overflow-hidden shadow-sm">
+                    <img src={`https://i.pravatar.cc/150?u=${i}`} alt="user" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+                <div className="pl-6">
+                  <p className="text-sm font-bold text-slate-800">10k+ Happy Clients</p>
+                  <p className="text-xs text-slate-500">Trusted in the community</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 items-center md:items-start justify-center md:justify-start">
-            <Link
-              to={"/search"}
-              className="modern-btn group relative inline-flex items-center gap-3 px-8 py-4 text-lg font-bold text-white rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-              style={{
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              }}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Let's Get Started
-                <svg
-                  className="w-6 h-6 transform group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </span>
-            </Link>
-
-            <div className="text-sm text-gray-500 flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-green-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span>No registration required to browse</span>
+          <div className="hidden md:block relative animate-float">
+            <img
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+              alt="Modern House"
+              className="rounded-[4rem] shadow-2xl border-8 border-white object-cover aspect-[4/5]"
+            />
+            <div className="absolute -bottom-8 -left-8 bg-white/90 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/40 animate-fade-in delay-300">
+              <div className="flex items-center gap-4">
+                <div className="bg-purple-600 p-3 rounded-2xl text-white text-2xl"><FaHandshake /></div>
+                <div>
+                  <p className="text-2xl font-bold text-slate-800">500+</p>
+                  <p className="text-sm text-slate-500 font-medium tracking-wide">Daily Listings</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* swiper */}
-      <Swiper navigation>
-        {offerListings &&
-          offerListings.length > 0 &&
-          offerListings.map((listing, index) => (
-            <SwiperSlide key={listing._id || index}>
-              <div
-                style={{
-                  background: `url(${listing.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: "cover",
-                }}
-                className="h-[500px]"
-              ></div>
-            </SwiperSlide>
-          ))}
-      </Swiper>
+      <div className="py-4 bg-beige-primary">
+        <HypeBanner />
+      </div>
 
-      {/* Listings results for offer, sale and rent */}
-      <div className="max-w-7xl mx-auto p-6 flex flex-col gap-12 my-10">
+      {/* Main Sections */}
+      <div className="max-w-7xl mx-auto p-6 flex flex-col gap-24 my-10 pb-20">
+
+        {/* Hot Deals */}
         {offerListings && offerListings.length > 0 && (
-          <div className="animate-fade-in">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                  <span className="text-4xl">🔥</span>
-                  Hot Deals & Offers
-                </h2>
-                <p className="text-gray-600 mt-2">Limited time special offers on premium properties</p>
+          <div className="animate-fade-in space-y-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-600 rounded-full text-sm font-bold uppercase tracking-wider">
+                  <FaPercent className="text-xs" /> Best Value
+                </div>
+                <h2 className="text-4xl font-extrabold text-slate-800 tracking-tight">Available Offers</h2>
+                <p className="text-slate-500 text-lg">Unbeatable prices for your favorite locations.</p>
               </div>
               <Link
-                className="modern-btn px-6 py-3 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
-                style={{
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="modern-btn px-8 py-3 font-bold rounded-2xl flex items-center gap-2 shadow-lg"
                 to={"/search?offer=true"}
               >
-                Explore All
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                View all offers
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {offerListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}
@@ -159,30 +150,25 @@ export default function Home() {
           </div>
         )}
 
+        {/* For Rent */}
         {rentListings && rentListings.length > 0 && (
-          <div className="animate-fade-in">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                  <span className="text-4xl">🏠</span>
-                  Available for Rent
-                </h2>
-                <p className="text-gray-600 mt-2">Find your perfect rental home today</p>
+          <div className="animate-fade-in space-y-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-bold uppercase tracking-wider">
+                  Rentals
+                </div>
+                <h2 className="text-4xl font-extrabold text-slate-800 tracking-tight">Recent Rentals</h2>
+                <p className="text-slate-500 text-lg">Modern apartments for your urban lifestyle.</p>
               </div>
               <Link
-                className="modern-btn px-6 py-3 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
-                style={{
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="modern-btn px-8 py-3 font-bold rounded-2xl flex items-center gap-2 shadow-lg"
                 to={"/search?type=rent"}
               >
-                Explore All
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                Explore rentals
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {rentListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}
@@ -190,30 +176,25 @@ export default function Home() {
           </div>
         )}
 
+        {/* For Sale */}
         {saleListings && saleListings.length > 0 && (
-          <div className="w-full animate-fade-in">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h2 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                  <span className="text-4xl">🏡</span>
-                  Featured Properties for Sale
-                </h2>
-                <p className="text-gray-600 mt-2">Invest in your dream property</p>
+          <div className="animate-fade-in space-y-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-bold uppercase tracking-wider">
+                  Properties
+                </div>
+                <h2 className="text-4xl font-extrabold text-slate-800 tracking-tight">Available For Sale</h2>
+                <p className="text-slate-500 text-lg">Find your permanent residence and investment.</p>
               </div>
               <Link
-                className="modern-btn px-6 py-3 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
-                style={{
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="modern-btn px-8 py-3 font-bold rounded-2xl flex items-center gap-2 shadow-lg"
                 to={"/search?type=sale"}
               >
-                Explore All
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                Browse sales
               </Link>
             </div>
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {saleListings.map((listing) => (
                 <ListingItem listing={listing} key={listing._id} />
               ))}

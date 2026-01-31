@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export default function Contact({listing}) {
+export default function Contact({ listing }) {
   const [landlord, setLandlord] = useState(null);
   const [message, setMessage] = useState('');
 
@@ -26,33 +26,38 @@ export default function Contact({listing}) {
   return (
     <>
       {landlord && (
-        <div className='flex flex-col gap-2'>
-          <p>
-            Contact <span className='font-semibold'>{landlord.username}</span>{' '}
-            for{' '}
-            <span className='font-semibold'>{listing.name.toLowerCase()}</span>
-          </p>
-          <textarea
-            name='message'
-            id='message'
-            rows='2'
-            value={message}
-            onChange={onChange}
-            placeholder='Enter your message here...'
-            className='w-full border p-3 rounded-lg'
-          ></textarea>
+        <div className='flex flex-col gap-6 animate-fade-in'>
+          <div className="flex items-center gap-4">
+            <img src={landlord.avatar} alt="Agent" className="h-12 w-12 rounded-full object-cover border-2 border-purple-200" />
+            <div>
+              <p className="text-sm font-bold text-slate-500 uppercase tracking-widest leading-tight">Agent</p>
+              <p className="text-xl font-black text-slate-800">{landlord.username}</p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Your Message</label>
+            <textarea
+              name='message'
+              id='message'
+              rows='3'
+              value={message}
+              onChange={onChange}
+              placeholder={`Hi ${landlord.username}, I'm interested in ${listing.name}...`}
+              className='modern-input w-full p-4 text-sm'
+            ></textarea>
+          </div>
 
           <Link
-            to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
-            className='bg-slate-700 text-white text-center p-3 uppercase rounded-lg hover:opacity-95'
+            to={`mailto:${landlord.email}?subject=Interested in ${listing.name}&body=${message}`}
+            className='modern-btn w-full py-5 rounded-2xl font-black text-lg tracking-widest text-center shadow-xl'
           >
-            Send Message
+            SEND INQUIRY ✉️
           </Link>
         </div>
       )}
     </>
   );
-  
 }
 
 

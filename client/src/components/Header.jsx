@@ -1,126 +1,94 @@
-import { FaSearch } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { FaSearch, FaUserCircle } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-
 
 export default function Header() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search)
-    urlParams.set('searchTerm', searchTerm)
+    const urlParams = new URLSearchParams();
+    urlParams.set('searchTerm', searchTerm);
     const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`)
-  }
+    navigate(`/search?${searchQuery}`);
+  };
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.search)
+    const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get('searchTerm');
     if (searchTermFromUrl) {
-      setSearchTerm(searchTermFromUrl)
+      setSearchTerm(searchTermFromUrl);
     }
-  }, [location.search])
+  }, [location.search]);
 
   return (
-    <header className="bg-slate-200 shadow-md">
-      <div className="flex justify-between items-center max-w-6xl m-auto p-3">
-        <Link to={"/"}>
-          <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
-            <span className="text-slate-500">Evans</span>
-            <span className="text-slate-700">Estate</span>
+    <header className="glass-nav sticky top-0 z-50">
+      <div className="flex justify-between items-center max-w-7xl mx-auto p-4 md:px-8">
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="bg-gradient-to-tr from-blue-600 to-purple-600 p-2 rounded-xl group-hover:rotate-12 transition-transform duration-300">
+            <span className="text-white font-bold text-xl">E</span>
+          </div>
+          <h1 className="font-extrabold text-xl sm:text-2xl tracking-tight hidden sm:block">
+            <span className="text-slate-800">Doheera</span>
+            <span className="text-gold-accent">Estate</span>
           </h1>
         </Link>
 
-        <form onSubmit={handleSubmit} className="bg-slate-100 p-3 rounded-lg items-center flex">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white/50 backdrop-blur-sm border border-black/5 p-2 px-4 rounded-2xl items-center flex w-32 sm:w-64 md:w-96 transition-all duration-300 focus-within:ring-2 ring-purple-200"
+        >
           <input
             type="text"
-            placeholder="Search..."
-            className="bg-transparent focus:outline-none w-24 sm:w-64 "
+            placeholder="Search properties..."
+            className="bg-transparent focus:outline-none w-full text-slate-700 text-sm md:text-base pr-2"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button>
-            <FaSearch className="text-slate-600" />
+          <button type="submit" className="hover:scale-110 transition-transform">
+            <FaSearch className="text-slate-500 text-lg" />
           </button>
         </form>
-        <ul className="flex gap-4">
-          <Link to={"/"}>
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              Home
-            </li>
-          </Link>
-          <Link to={"/about"}>
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              About
-            </li>
-          </Link>
-          <Link to={"/profile"}>
-            {currentUser ? (
-              <img
-                src={currentUser.avatar || "default-avatar.png"}
-                className="h-7 w-7 rounded-full object-cover"
-              />
-            ) : (
-              <li className="sm:inline text-slate-700 hover:underline">
-                Sign in
+
+        <nav>
+          <ul className="flex items-center gap-6">
+            <Link to="/" className="hidden md:block">
+              <li className="text-slate-700 font-semibold hover:text-purple-600 transition-colors">
+                Home
               </li>
-            )}
-          </Link>
-        </ul>
+            </Link>
+            <Link to="/about" className="hidden md:block">
+              <li className="text-slate-700 font-semibold hover:text-purple-600 transition-colors">
+                About
+              </li>
+            </Link>
+
+            <Link to="/profile" className="flex items-center">
+              {currentUser ? (
+                <div className="flex items-center gap-2 bg-white/40 p-1 pr-3 rounded-full hover:bg-white/60 transition-all border border-black/5">
+                  <img
+                    src={currentUser.avatar}
+                    alt="profile"
+                    className="h-8 w-8 rounded-full object-cover border-2 border-purple-200"
+                  />
+                  <span className="hidden sm:inline text-sm font-bold text-slate-700">
+                    {currentUser.username?.split(' ')[0] || 'User'}
+                  </span>
+                </div>
+              ) : (
+                <div className="modern-btn px-6 py-2 rounded-btn font-bold shadow-lg flex items-center gap-2">
+                  <FaUserCircle className="text-lg" />
+                  <span>Login</span>
+                </div>
+              )}
+            </Link>
+          </ul>
+        </nav>
       </div>
     </header>
   );
 }
-
-// import { FaSearch } from "react-icons/fa";
-// import { Link } from "react-router-dom";
-// import { useSelector } from "react-redux";
-
-// export default function Header() {
-//   const { currentUser } = useSelector((state) => state.user);
-
-//   return (
-//     <header className="bg-slate-200 shadow-md">
-//       <div className="flex justify-between items-center max-w-6xl m-auto p-3">
-//         <Link to={"/"}>
-//           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
-//             <span className="text-slate-500">Evans</span>
-//             <span className="text-slate-700">Estate</span>
-//           </h1>
-//         </Link>
-
-//         <form className="bg-slate-100 p-3 rounded-lg items-center flex">
-//           <input
-//             type="text"
-//             placeholder="Search..."
-//             className="bg-transparent focus:outline-none w-24 sm:w-64"
-//           />
-//           <FaSearch className="text-slate-600" />
-//         </form>
-
-//         <ul className="flex gap-4">
-//           <Link to={"/"} className="hidden sm:inline">
-//             <li className="text-slate-700 hover:underline">Home</li>
-//           </Link>
-//           <Link to={"/about"} className="hidden sm:inline">
-//             <li className="text-slate-700 hover:underline">About</li>
-//           </Link>
-//           {currentUser ? (
-//             <img
-//               src={currentUser.avatar || "default-avatar.png"} // Provide a default avatar image if currentUser.avatar is not available
-//               alt="profile"
-//               className="h-8 w-8 rounded-full"
-//             />
-//           ) : (
-//             <Link to={"/sign-in"}>
-//               <li className="sm:inline text-slate-700 hover:underline">Sign in</li>
-//             </Link>
-//           )}
-//         </ul>
-//       </div>
-//     </header>
-//   );
-// }

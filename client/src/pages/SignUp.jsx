@@ -1,8 +1,7 @@
-// import React from 'react'
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
-
+import GlassCard from "../components/GlassCard";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -45,48 +44,81 @@ export default function SignUp() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 bg-beige-primary">
+      <GlassCard className="p-8 max-w-md w-full animate-fade-in" hover={false}>
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-extrabold text-slate-800 mb-2">Join Us</h1>
+          <p className="text-slate-500 font-medium">Create your account to start exploring</p>
+        </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="username"
-          className="p-3 border rounded-lg"
-          id="username"
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          placeholder="email"
-          className="p-3 border rounded-lg"
-          id="email"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          placeholder="password"
-          className="p-3 border rounded-lg"
-          id="password"
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="space-y-1">
+            <label className="text-sm font-bold text-slate-700 ml-1">Username</label>
+            <input
+              type="text"
+              placeholder="johndoe"
+              className="modern-input w-full"
+              id="username"
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <button
-          disabled={loading}
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-        >
-          {loading ? "Loading..." : "Sign Up"}
-        </button>
+          <div className="space-y-1">
+            <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+            <input
+              type="email"
+              placeholder="name@email.com"
+              className="modern-input w-full"
+              id="email"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-bold text-slate-700 ml-1">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="modern-input w-full"
+              id="password"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button
+            disabled={loading}
+            className="modern-btn w-full py-4 rounded-2xl font-bold text-lg shadow-lg"
+          >
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
+
+          <div className="relative flex items-center gap-4 py-2">
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="text-xs font-bold text-slate-400 uppercase">Or join with</span>
+            <div className="flex-grow border-t border-slate-200"></div>
+          </div>
+
           <OAuth />
-      </form>
+        </form>
 
-      <div className="flex gap-2 mt-5">
-        <p>Have an accoun?</p>
-        <Link to={"/sign-in"}>
-          <span className="text-blue-700">Sign In</span>
-        </Link>
-      </div>
-      {error && <p className="text-red-500 mt-5">{error}</p>}
+        <div className="mt-8 text-center pt-6 border-t border-slate-100">
+          <p className="text-slate-600 text-sm">
+            Already have an account?
+            <Link to="/sign-in">
+              <span className="text-purple-600 font-bold hover:underline ml-1">Sign In</span>
+            </Link>
+          </p>
+        </div>
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl">
+            <p className="text-red-500 text-sm font-medium text-center">{error}</p>
+          </div>
+        )}
+      </GlassCard>
     </div>
   );
 }

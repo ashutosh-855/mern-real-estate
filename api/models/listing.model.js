@@ -71,6 +71,16 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isUpcoming: {
+      type: Boolean,
+      default: false,
+    },
+    launchDate: {
+      type: Date,
+    },
+    hypeDescription: {
+      type: String,
+    },
   },
   {
     timestamps: true,

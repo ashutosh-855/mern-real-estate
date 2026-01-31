@@ -85,3 +85,53 @@ export const signout = async (req, res, next) => {
     next(error);
   }
 };
+
+export const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return next(errorHandler(404, "User not found with this email"));
+
+    const resetToken = Math.random().toString(36).slice(-20) + Math.random().toString(36).slice(-20);
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+    await user.save();
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+
+    // Mocking email sending
+    console.log(`\n--- PASSWORD RESET EMAIL MOCK ---`);
+    console.log(`To: ${email}`);
+    console.log(`Link: ${resetUrl}`);
+    console.log(`---------------------------------\n`);
+
+    res.status(200).json({ success: true, message: "Email sent (Check console for mock link)" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) return next(errorHandler(400, "Invalid or expired token"));
+
+    user.password = bcryptjs.hashSync(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password reset successful" });
+  } catch (error) {
+    next(error);
+  }
+};

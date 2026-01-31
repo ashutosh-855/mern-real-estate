@@ -19,8 +19,14 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://t4.ftcdn.net/jpg/05/09/59/75/240_F_509597532_RKUuYsERhODmkxkZd82pSHnFtDAtgbzJ.jpg'
-  }
-}, {timestamps: true})
+  },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
+  favorites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Listing'
+  }]
+}, { timestamps: true })
 
 const User = mongoose.model('User', userSchema)
 

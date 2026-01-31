@@ -28,7 +28,7 @@ const userSlice = createSlice({
     updateUserStart: (state) => {
       state.loading = true;
     },
-    updateuserSuccess: (state, action) => {
+    updateUserSuccess: (state, action) => {
       state.currentUser = action.payload;
       state.loading = false;
       state.error = null;
@@ -76,9 +76,9 @@ export const {
   signInStart,
   signInSuccess,
   signInFailure,
-  
+
   updateUserStart,
-  updateuserSuccess,
+  updateUserSuccess,
   updateUserFailure,
 
   deleteUserStart,
